@@ -30,12 +30,13 @@ struct Color
 	int possible_number;
 	//the number of possible
 	int definite_number;
+	int available_for_answer;
+	int possible_spots;
 
 };
 
 int wrong_position_right_color;
 int right_position_right_color;
-int wrong_color;
 
 struct Color colors[NUMBER_OF_COLORS];
 
@@ -47,9 +48,6 @@ int getFeedback(void){
 	printf("\n");
 	printf("number of right color in wrong position: ");
 	scanf("%d", &wrong_position_right_color);
-	printf("\n");
-	printf("number of wrong color: ");
-	scanf("%d", &wrong_color);
 	printf("\n");
 	return 0;
 }
@@ -76,45 +74,237 @@ int main (void){
 
 	for (int i = 0; i < NUMBER_OF_COLORS; i++ ){
 			colors[i].possible_number = NUMBER_OF_HOLES;
+			colors[i].definite_number = 0;
 			colors[i].in_combination = FALSE;
+			colors[i].possible_spots = NUMBER_OF_HOLES;
 		for(int j = 0; j < NUMBER_OF_HOLES; j++){
 			colors[i].position[j] = POSSIBLE;
 		}
 	}
 
 	for (int i = 0; i < NUMBER_OF_COLORS; i++ ){
-		printf("Color %d is %s\n", i, colors[i].name);
+		//printf("Color %d is %s\n", i, colors[i].name);
 	}
 
 	int color_count = 0;//tracks the number of colors tried to loop through all of them if necessary
-	int colors_found = 0;
+	int colors_found = 0;//tracks the number of colors found in the code
 	int answer[4];
 	int base;
 	int guesses[NUMBER_OF_TRIES][NUMBER_OF_HOLES];
-	int pegs[NUMBER_OF_TRIES][3];
+	int pegs[NUMBER_OF_TRIES][2];
+	int min_rprc;
+	int min_rpwc;
+	int three_occurences;
+	int tried_ABAB = FALSE;
+	int tried_ABBA = FALSE;
+	int tried_BAAB = FALSE;
 
 	for(int i = 0; i< NUMBER_OF_TRIES; i++){
 
 	}
 	
 	while(turn < NUMBER_OF_TRIES){
-	printf("this is turn %d\n", turn+1);
 
-		if(turn == NUMBER_OF_COLORS && colors_found != NUMBER_OF_HOLES){//means at least 3 of one color that is not the base color
+	printf("\nTURN %d\n\n", turn+1);
+
+
+		if(turn == NUMBER_OF_COLORS && colors_found != NUMBER_OF_HOLES){//means at least 3 occurences of one color that is not the base color
+			//printf("MUST BE ONE COLOR 3 OCCCURENCES\n");
+			for(int i = 0; i < NUMBER_OF_COLORS; i ++){
+				if(colors[i].possible_number == 3){
+					colors[i].definite_number = 3;
+					colors_found = NUMBER_OF_HOLES;
+					three_occurences = TRUE;
+
+				}
+			}
 
 		}
 		if(colors_found == NUMBER_OF_HOLES){//found all the colors not right order
-			printf("FOUND ALL THE COLORS\n");
-			for(int i = 0; i < NUMBER_OF_COLORS; i++){
+			//printf("FOUND ALL THE COLORS\n");
+
+			
+			for(int i = 0; i< NUMBER_OF_COLORS; i++){//specific case where it is later determined that there are 2 occurences of a color and not 3
+				if(colors[i].possible_number == 3 && colors[i].definite_number == 0 ){
+					colors[i].definite_number = 2;
+				}
+			}
+
+			//BEFORE
+			/*for(int i = 0; i < NUMBER_OF_COLORS; i++){//First we assign all the spots we know are correct
 				if(colors[i].in_combination){
 					printf("%s in combination\n", colors[i].name);
 					for(int j = 0; j< NUMBER_OF_HOLES; j++){
-						if (colors[i].position[j] == CORRECT){
-							answer[j] = i;//FININSH THIS////////////////////////////
+						printf(" BEFORE FOR COLOR %s postion %d is %d\n", colors[i].name,j,colors[i].position[j]);
+						
+					}
+
+				}
+			}*/
+
+			if(!three_occurences){
+				//remove some potential guesses based on
+				min_rprc = NUMBER_OF_HOLES;//find the minimum number of red pegs in guesses with base,base,color_count,color_count
+				min_rpwc = NUMBER_OF_HOLES;//find the minimum number of white pegs in guesses with base,base,color_count,color_count
+
+				for(int i = 0; i < NUMBER_OF_COLORS; i++){
+					if(colors[i].in_combination){
+						if(pegs[i][0] < min_rprc){
+							min_rprc = pegs[i][0];
+						}
+						if(pegs[i][1] < min_rpwc){
+							min_rpwc = pegs[i][1];
+						}					
+
+					}
+				}
+
+				//CHECK THIS PART ADDED BASE CASE
+
+				for(int i = 0; i < NUMBER_OF_COLORS; i++){//remove possibilities based on previous cases compared to the base case
+					if(colors[i].in_combination){
+						if(pegs[i][0]-min_rprc>0 && pegs[i][1] == min_rpwc && i!=base){//must be on right side
+							colors[i].position[0] = IMPOSSIBLE;
+							colors[i].position[1] = IMPOSSIBLE;
+							colors[i].possible_spots = 2;
+						}
+						if(pegs[i][1]-min_rpwc>0 && pegs[i][0] == min_rprc && pegs[i][0]<2 && i!=base){//must be on the left side CHECK THIS
+							colors[i].position[2] = IMPOSSIBLE;
+							colors[i].position[3] = IMPOSSIBLE;
+							colors[i].possible_spots = 2;
 						}
 					}
 				}
 			}
+
+			for(int i = 0; i< NUMBER_OF_HOLES; i++){
+				answer[i] = -1;
+			}
+			for(int i = 0; i < NUMBER_OF_COLORS; i++){//First we assign all the spots we know are correct
+				if(colors[i].in_combination){
+					colors[i].available_for_answer = colors[i].definite_number;
+					//printf("%s in combination\n", colors[i].name);
+					for(int j = 0; j< NUMBER_OF_HOLES; j++){
+						//printf("FOR COLOR %s postion %d is %d\n", colors[i].name,j,colors[i].position[j]);
+						if (colors[i].position[j] == CORRECT){
+							//printf("Found correct position for %s at position %d\n",colors[i].name, j);
+							answer[j] = i;
+							colors[i].available_for_answer--;
+						}
+					}
+
+				}
+			}
+			for(int i = 0; i < NUMBER_OF_COLORS; i++){//Then we assign possible colors to the remaining spots  when 2 possible spots
+				if(colors[i].in_combination){
+					//printf("Checking color: %s ", colors[i].name);
+					for(int j = 0; j< NUMBER_OF_HOLES; j++){
+						if (colors[i].position[j] == POSSIBLE && answer[j] == -1 && colors[i].available_for_answer>0 && colors[i].possible_spots == 2){//assign first those that only have 2 possible spots to avoid being stuck with an impossible spot
+							//printf("trying %s at position %d\n", colors[i].name, j);
+							answer[j] = i;
+							colors[i].available_for_answer--;
+						}
+					}
+
+				}
+			}
+
+			for(int i = 0; i < NUMBER_OF_COLORS; i++){//Then we assign possible colors to the remaining spots when 4 possible spots 
+				if(colors[i].in_combination){
+					//printf("Checking color: %s ", colors[i].name);
+					for(int j = 0; j< NUMBER_OF_HOLES; j++){
+						if (colors[i].position[j] == POSSIBLE && answer[j] == -1 && colors[i].available_for_answer>0 && colors[i].possible_spots == 4){//assign the rest (the colors that have 4 possible spots)
+							//printf("trying %s at position %d\n", colors[i].name, j);
+							answer[j] = i;
+							colors[i].available_for_answer--;
+						}
+					}
+
+				}
+			}
+
+			int colors_in_answer[2];
+			int sum_colors = 0;
+			int sum_possibilities = 0;
+			
+
+
+			for(int i = 0; i<NUMBER_OF_COLORS;i++){
+				if(colors[i].in_combination){
+					if(colors[i].definite_number==2){
+						//printf("%s definitely 2\n",colors[i].name);
+						sum_colors ++;
+						sum_possibilities+=colors[i].possible_spots;
+					}
+				}
+			}
+			if(sum_colors==2 && sum_possibilities ==4 ){//2 colors 2 occurrences split half half AABB or BBAA
+				//printf("It Worked AABB\n");
+
+			}
+			
+
+			else if(sum_colors==2 && sum_possibilities==8){// 2 colors 2 occurrences ABAB ABBA BAAB BABA
+				//printf("IT Worked ABAB\n");
+				if(pegs[turn-1][1] == NUMBER_OF_HOLES){//try BABA and BAAB
+					answer[0] = guesses[turn-1][1];
+					answer[1] = guesses[turn-1][0];
+					answer[2] = guesses[turn-1][3]; 
+					answer[3] = guesses[turn-1][2];
+
+				}
+				else if(!tried_ABAB){//ABAB
+					
+					answer[0] = guesses[turn-1][0];
+					answer[1] = guesses[turn-1][2];
+					answer[2] = guesses[turn-1][1]; 
+					answer[3] = guesses[turn-1][3];
+					tried_ABAB = TRUE;
+				}
+				else if( !tried_ABBA){//ABBA
+					answer[0] = guesses[turn-2][0];
+					answer[1] = guesses[turn-2][2];
+					answer[2] = guesses[turn-2][3]; 
+					answer[3] = guesses[turn-2][1];
+
+
+				}
+
+			}
+			else{
+				if(pegs[turn-1][0] == 2 && pegs[turn-1][1] == 2 && guesses[turn-1][0] != guesses[turn-1][1] && guesses[turn-1][0] != guesses[turn-1][1]){//check if 2 base first
+					//try switching the position of the first 2
+					answer[0] = guesses[turn-1][1];
+					answer[1] = guesses[turn-1][0];
+					answer[2] = guesses[turn-1][2]; 
+					answer[3] = guesses[turn-1][3];
+
+				}	
+				else if (pegs[turn-1][0] == 2 && pegs[turn-1][1] == 2 /*&& tried_left_side*/){
+					answer[0] = guesses[turn-1][0];
+					answer[1] = guesses[turn-1][1];
+					answer[2] = guesses[turn-1][3]; 
+					answer[3] = guesses[turn-1][2];	
+				}
+				else if(pegs[turn-1][1] == NUMBER_OF_HOLES){
+					//change positions for both left and right side
+					answer[0] = guesses[turn-1][1];
+					answer[1] = guesses[turn-1][0];
+					answer[2] = guesses[turn-1][3]; 
+					answer[3] = guesses[turn-1][2];
+
+				}
+			}
+			printGuess(answer[0],answer[1],answer[2],answer[3]);
+			guesses[turn][0] = answer[0];
+			guesses[turn][1] = answer[1];
+			guesses[turn][2] = answer[2];
+			guesses[turn][3] = answer[3];
+
+			getFeedback();
+			pegs[turn][0] = right_position_right_color;
+			pegs[turn][1] = wrong_position_right_color;
+
 
 		}
 		else if(colors_found == 0){//loop guessing all the same color until at least one is found for the base
@@ -125,9 +315,8 @@ int main (void){
 			getFeedback();
 			pegs[turn][0] = right_position_right_color;
 			pegs[turn][1] = wrong_position_right_color;
-			pegs[turn][2] = wrong_color;
 			colors[color_count].definite_number = right_position_right_color;
-			printf("There are %d %s\n", colors[color_count].definite_number, colors[color_count].name);
+			//printf("There are %d %s\n", colors[color_count].definite_number, colors[color_count].name);
 			colors_found = colors[color_count].definite_number;
 			if(colors_found!=0){//as soon as one color is found it becomes the base
 				base = color_count;
@@ -147,32 +336,41 @@ int main (void){
 
 			pegs[turn][0] = right_position_right_color;
 			pegs[turn][1] = wrong_position_right_color;
-			pegs[turn][2] = wrong_color;
 
 			if(colors[base].definite_number <=2){
 
 				if(right_position_right_color + wrong_position_right_color > colors[base].definite_number){//works only if base color number <=2 
 					
+					if(right_position_right_color+wrong_position_right_color == 3 && colors[base].definite_number == 1){
+						colors[color_count].in_combination = TRUE;
+						colors[color_count].possible_number = 3;//might be 3 occurences of the color
+						colors_found += right_position_right_color + wrong_position_right_color - colors[base].definite_number;//just add 2 to colrs_found counter as it is not sure
+						//printf("might be 3\n");
+					}
 					//MIGHT BE 3 COLORS IN NEW TEST CHECK FOR THAT
-					colors[color_count].in_combination = TRUE;
-					colors[color_count].definite_number = right_position_right_color + wrong_position_right_color - colors[base].definite_number;//determine the number of occurences of a non-base
-					colors_found += colors[color_count].definite_number;
-					printf("there is %s in the code\n", colors[color_count].name);
+					else{
+						colors[color_count].in_combination = TRUE;
+						colors[color_count].definite_number = right_position_right_color + wrong_position_right_color - colors[base].definite_number;//determine the number of occurences of a non-base
+						colors_found += colors[color_count].definite_number;
+					}
+						//printf("there is %s in the code\n", colors[color_count].name);
 
 
 
 				}
 				else{//if the number of pegs is equal to the definite number of base color(1 or 2)
 					colors[color_count].definite_number = 0;//if no extra pegs are added it means the color is not in the code
-					printf("there is no %s in the code\n", colors[color_count].name);
+					//printf("there is no %s in the code\n", colors[color_count].name);
 					if(colors[base].definite_number == 1 && right_position_right_color == 1 ){//one base color and red peg -> left side
 						colors[base].position[2] = IMPOSSIBLE;
 						colors[base].position[3] = IMPOSSIBLE;
+						colors[base].possible_spots = 2;
 
 					}
 					if(colors[base].definite_number == 1 && wrong_position_right_color == 1 ){//one base color and white peg ->right side
 						colors[base].position[0] = IMPOSSIBLE;
 						colors[base].position[1] = IMPOSSIBLE;
+						colors[base].possible_spots = 2;
 
 					}
 
@@ -181,6 +379,7 @@ int main (void){
 						colors[base].position[1] = CORRECT;
 						colors[base].position[2] = IMPOSSIBLE;
 						colors[base].position[3] = IMPOSSIBLE;
+						colors[base].possible_spots = 2;
 
 					}
 
@@ -189,6 +388,7 @@ int main (void){
 						colors[base].position[1] = IMPOSSIBLE;
 						colors[base].position[2] = CORRECT;
 						colors[base].position[3] = CORRECT;
+						colors[base].possible_spots = 2;
 
 					}
 
@@ -200,8 +400,28 @@ int main (void){
 
 			}
 			else{//base color number = 3
+				//printf("BASE IS 3");
+				three_occurences = TRUE;
 
 				//Add this case
+				if(right_position_right_color == 1){ //guarantees 2 occurences of the color are on the right side
+					colors[base].position[2] = CORRECT;
+					colors[base].position[3] = CORRECT;
+
+
+				}
+				if(right_position_right_color == 2 && wrong_position_right_color == 0){//guarantees 2 occurences of the color on the left side
+					colors[base].position[0] = CORRECT;
+					colors[base].position[1] = CORRECT;
+				}
+				if(right_position_right_color+wrong_position_right_color>2){//found the last color in combination
+					//printf("FOUND LAST COLOR\n");
+					colors[color_count].in_combination = TRUE;
+					colors[color_count].definite_number = 1;
+					colors_found += colors[color_count].definite_number;
+			
+
+				}
 
 
 			}
@@ -217,7 +437,7 @@ int main (void){
 			color_count++;
 		}
 		for(int i = 0; i<= turn; i ++){
-			printf("GUESS %d: %s %s %s %s and Feedback %d red %d white %d none\n",i+1,colors[guesses[i][0]].name,colors[guesses[i][1]].name,colors[guesses[i][2]].name,colors[guesses[i][3]].name,pegs[i][0],pegs[i][1],pegs[i][2]);
+			printf("GUESS %d: %s %s %s %s and Feedback %d red %d white\n",i+1,colors[guesses[i][0]].name,colors[guesses[i][1]].name,colors[guesses[i][2]].name,colors[guesses[i][3]].name,pegs[i][0],pegs[i][1]);
 		}
 		turn++;
 
