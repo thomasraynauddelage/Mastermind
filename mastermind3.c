@@ -98,10 +98,6 @@ int main (void){
 	int tried_ABAB = FALSE;
 	int tried_ABBA = FALSE;
 	int tried_BAAB = FALSE;
-
-	for(int i = 0; i< NUMBER_OF_TRIES; i++){
-
-	}
 	
 	while(turn < NUMBER_OF_TRIES){
 
