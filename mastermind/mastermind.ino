@@ -6,6 +6,7 @@
 #define IMPOSSIBLE 0
 #define TRUE 1
 #define FALSE 0
+#include <string.h>
 
 struct Color
 {
@@ -33,6 +34,58 @@ int right_position_right_color;
 
 struct Color colors[NUMBER_OF_COLORS];
 
+  int sensorRed = 0;
+  int sensorGreen = 1;
+  int sensorBlue = 2;
+ 
+  int led1_red = 0;
+  int led1_green = 1;
+  int led1_blue = 2;
+  
+  int led2_red = 3;
+  int led2_green = 4;
+  int led2_blue = 5;
+  
+  int led3_red = 6;
+  int led3_green = 7;
+  int led3_blue = 8;
+  
+  int led4_red = 9;
+  int led4_green = 10;
+  int led4_blue = 11;
+
+  //int motor = 15;
+
+
+void setup() {
+  // put your setup code here, to run once:
+
+  Serial.begin(9600);
+ 
+  pinMode(sensorRed, OUTPUT); //Red LED
+  pinMode(sensorGreen, OUTPUT); //Green LED 
+  pinMode(sensorBlue, OUTPUT); //Blue LED 
+  
+  pinMode(led1_red, OUTPUT); //Red LED
+  pinMode(led1_green, OUTPUT); //Green LED 
+  pinMode(led1_blue, OUTPUT); //Blue LED 
+  
+  pinMode(led2_red, OUTPUT); //Red LED
+  pinMode(led2_green, OUTPUT); //Green LED 
+  pinMode(led2_blue, OUTPUT); //Blue LED 
+
+  pinMode(led3_red, OUTPUT); //Red LED
+  pinMode(led3_green, OUTPUT); //Green LED 
+  pinMode(led3_blue, OUTPUT); //Blue LED 
+
+  pinMode(led3_red, OUTPUT); //Red LED
+  pinMode(led3_green, OUTPUT); //Green LED 
+  pinMode(led3_blue, OUTPUT); //Blue LED 
+
+   //pinMode(motor, OUTPUT); //motor 
+
+}
+
 int getFeedback(void){
   /*printf("how did I do?\n");
   printf("number of right color in right position: ");
@@ -42,30 +95,138 @@ int getFeedback(void){
   scanf("%d", &wrong_position_right_color);
   printf("\n");
   return 0;*/
+
+  delay(5000);
+  right_position_right_color = 0;
+  wrong_position_right_color = 0;
   
 }
 
 int printGuess(int first, int second, int third, int fourth){
   //printf("My guess is: %s %s %s %s\n", colors[first].name, colors[second].name, colors[third].name,colors[fourth].name);
   //LIGHT THE GUESSES
+      Serial.println("Values: ");
+      Serial.print(first);
+      Serial.print(second);
+      Serial.print(third);
+      Serial.print(fourth);
+      
+      
+      digitalWrite(led1_red,LOW);
+      digitalWrite(led1_green,LOW);
+      digitalWrite(led1_blue,LOW);
+
+      //FIRST LED
+      if(strcmp(colors[first].name, "white")==0){//first LED white
+      digitalWrite(led1_red,HIGH);
+      digitalWrite(led1_green,HIGH);
+      digitalWrite(led1_blue,HIGH);
+ 
+      }
+      else if(strcmp(colors[first].name, "purple") == 0){//first LED purple
+        digitalWrite(led1_red,HIGH);
+        digitalWrite(led1_blue,HIGH);
+      }
+      else if(strcmp(colors[first].name, "yellow") == 0){//first LED yellow
+        digitalWrite(led1_red,HIGH);
+        digitalWrite(led1_green,HIGH);
+      }
+
+      else if(strcmp(colors[first].name, "green") == 0){//first LED green
+        digitalWrite(led1_green,HIGH);
+      }
+      else if(strcmp(colors[first].name, "red") == 0){//first LED red
+        digitalWrite(led1_red,HIGH);
+      }
+      else if(strcmp(colors[first].name, "blue") == 0){//first LED blue
+        digitalWrite(led1_blue,HIGH);
+      }
+
+       //SECOND LED
+      if(strcmp(colors[first].name, "white")==0){//second LED white
+      digitalWrite(led2_red,HIGH);
+      digitalWrite(led2_green,HIGH);
+      digitalWrite(led2_blue,HIGH);
+ 
+      }
+      else if(strcmp(colors[first].name, "purple") == 0){//second LED purple
+        digitalWrite(led2_red,HIGH);
+        digitalWrite(led2_blue,HIGH);
+      }
+      else if(strcmp(colors[first].name, "yellow") == 0){//second LED yellow
+        digitalWrite(led2_red,HIGH);
+        digitalWrite(led2_green,HIGH);
+      }
+
+      else if(strcmp(colors[first].name, "green") == 0){//second LED green
+        digitalWrite(led2_green,HIGH);
+      }
+      else if(strcmp(colors[first].name, "red") == 0){//second LED red
+        digitalWrite(led1_red,HIGH);
+      }
+      else if(strcmp(colors[first].name, "blue") == 0){//second LED blue
+        digitalWrite(led2_blue,HIGH);
+      }
+       //THIRD LED
+      if(strcmp(colors[first].name, "white")==0){//third LED white
+      digitalWrite(led3_red,HIGH);
+      digitalWrite(led3_green,HIGH);
+      digitalWrite(led3_blue,HIGH);
+ 
+      }
+      else if(strcmp(colors[first].name, "purple") == 0){//third LED purple
+        digitalWrite(led3_red,HIGH);
+        digitalWrite(led3_blue,HIGH);
+      }
+      else if(strcmp(colors[first].name, "yellow") == 0){//third LED yellow
+        digitalWrite(led3_red,HIGH);
+        digitalWrite(led3_green,HIGH);
+      }
+
+      else if(strcmp(colors[first].name, "green") == 0){//third LED green
+        digitalWrite(led3_green,HIGH);
+      }
+      else if(strcmp(colors[first].name, "red") == 0){//third LED red
+        digitalWrite(led3_red,HIGH);
+      }
+      else if(strcmp(colors[first].name, "blue") == 0){//third LED blue
+        digitalWrite(led3_blue,HIGH);
+      }
+       //FOURTH LED
+      if(strcmp(colors[first].name, "white")==0){//fourth LED white
+      digitalWrite(led4_red,HIGH);
+      digitalWrite(led4_green,HIGH);
+      digitalWrite(led4_blue,HIGH);
+ 
+      }
+      else if(strcmp(colors[first].name, "purple") == 0){//fourth LED purple
+        digitalWrite(led4_red,HIGH);
+        digitalWrite(led4_blue,HIGH);
+      }
+      else if(strcmp(colors[first].name, "yellow") == 0){//fourth LED yellow
+        digitalWrite(led4_red,HIGH);
+        digitalWrite(led4_green,HIGH);
+      }
+
+      else if(strcmp(colors[first].name, "green") == 0){//fourth LED green
+        digitalWrite(led4_green,HIGH);
+      }
+      else if(strcmp(colors[first].name, "red") == 0){//fourth LED red
+        digitalWrite(led4_red,HIGH);
+      }
+      else if(strcmp(colors[first].name, "blue") == 0){//fourth LED blue
+        digitalWrite(led4_blue,HIGH);
+      }
+    
+  
+  
 
   return 0;
 
 }
 
 
-void setup() {
-  // put your setup code here, to run once:
-  int sensorRed = 0;
-  int sensorGreen = 1;
-  int sensorBlue = 2;
-  
-  pinMode(sensorRed, OUTPUT); //Red LED
-  pinMode(sensorGreen, OUTPUT); //Green LED 
-  pinMode(sensorBLue, OUTPUT); //Blue LED 
-  
 
-}
 
 void loop() {
   // put your main code here, to run repeatedly:
@@ -435,7 +596,7 @@ void loop() {
     
   
     if(right_position_right_color == NUMBER_OF_HOLES){
-      printf("I win!\n");
+     // printf("I win!\n");
      // return 0;
     }
     if(colors_found != NUMBER_OF_HOLES){

@@ -82,9 +82,9 @@ int main (void){
 		}
 	}
 
-	for (int i = 0; i < NUMBER_OF_COLORS; i++ ){
+	//for (int i = 0; i < NUMBER_OF_COLORS; i++ ){
 		//printf("Color %d is %s\n", i, colors[i].name);
-	}
+	//}
 
 	int color_count = 0;//tracks the number of colors tried to loop through all of them if necessary
 	int colors_found = 0;//tracks the number of colors found in the code
