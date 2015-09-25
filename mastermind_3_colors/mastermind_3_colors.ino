@@ -1,4 +1,4 @@
-#define NUMBER_OF_COLORS 3
+#define NUMBER_OF_COLORS 6
 #define NUMBER_OF_HOLES 4
 #define NUMBER_OF_TRIES 10
 #define CORRECT 2
@@ -80,9 +80,9 @@ void setup() {
   pinMode(led3_green, OUTPUT); //Green LED 
   pinMode(led3_blue, OUTPUT); //Blue LED 
 
-  pinMode(led3_red, OUTPUT); //Red LED
-  pinMode(led3_green, OUTPUT); //Green LED 
-  pinMode(led3_blue, OUTPUT); //Blue LED 
+  pinMode(led4_red, OUTPUT); //Red LED
+  pinMode(led4_green, OUTPUT); //Green LED 
+  pinMode(led4_blue, OUTPUT); //Blue LED 
 
    //pinMode(motor, OUTPUT); //motor 
 
@@ -99,7 +99,7 @@ int getFeedback(void){
   return 0;*/
 
   delay(5000);
-  right_position_right_color = 0;
+  right_position_right_color = 1;
   wrong_position_right_color = 0;
   digitalWrite(led1_red,LOW);
   digitalWrite(led1_green,LOW);
@@ -163,78 +163,78 @@ int printGuess(int first, int second, int third, int fourth){
       }
 
        //SECOND LED
-      if(strcmp(colors[first].name, "white")==0){//second LED white
+      if(strcmp(colors[second].name, "white")==0){//second LED white
       digitalWrite(led2_red,HIGH);
       digitalWrite(led2_green,HIGH);
       digitalWrite(led2_blue,HIGH);
  
       }
-      else if(strcmp(colors[first].name, "purple") == 0){//second LED purple
+      else if(strcmp(colors[second].name, "purple") == 0){//second LED purple
         digitalWrite(led2_red,HIGH);
         digitalWrite(led2_blue,HIGH);
       }
-      else if(strcmp(colors[first].name, "yellow") == 0){//second LED yellow
+      else if(strcmp(colors[second].name, "yellow") == 0){//second LED yellow
         digitalWrite(led2_red,HIGH);
         digitalWrite(led2_green,HIGH);
       }
 
-      else if(strcmp(colors[first].name, "green") == 0){//second LED green
+      else if(strcmp(colors[second].name, "green") == 0){//second LED green
         digitalWrite(led2_green,HIGH);
       }
-      else if(strcmp(colors[first].name, "red") == 0){//second LED red
+      else if(strcmp(colors[second].name, "red") == 0){//second LED red
         digitalWrite(led2_red,HIGH);
       }
-      else if(strcmp(colors[first].name, "blue") == 0){//second LED blue
+      else if(strcmp(colors[second].name, "blue") == 0){//second LED blue
         digitalWrite(led2_blue,HIGH);
       }
        //THIRD LED
-      if(strcmp(colors[first].name, "white")==0){//third LED white
+      if(strcmp(colors[third].name, "white")==0){//third LED white
       digitalWrite(led3_red,HIGH);
       digitalWrite(led3_green,HIGH);
       digitalWrite(led3_blue,HIGH);
  
       }
-      else if(strcmp(colors[first].name, "purple") == 0){//third LED purple
+      else if(strcmp(colors[third].name, "purple") == 0){//third LED purple
         digitalWrite(led3_red,HIGH);
         digitalWrite(led3_blue,HIGH);
       }
-      else if(strcmp(colors[first].name, "yellow") == 0){//third LED yellow
+      else if(strcmp(colors[third].name, "yellow") == 0){//third LED yellow
         digitalWrite(led3_red,HIGH);
         digitalWrite(led3_green,HIGH);
       }
 
-      else if(strcmp(colors[first].name, "green") == 0){//third LED green
+      else if(strcmp(colors[third].name, "green") == 0){//third LED green
         digitalWrite(led3_green,HIGH);
       }
-      else if(strcmp(colors[first].name, "red") == 0){//third LED red
+      else if(strcmp(colors[third].name, "red") == 0){//third LED red
         digitalWrite(led3_red,HIGH);
       }
-      else if(strcmp(colors[first].name, "blue") == 0){//third LED blue
+      else if(strcmp(colors[third].name, "blue") == 0){//third LED blue
         digitalWrite(led3_blue,HIGH);
       }
        //FOURTH LED
-      if(strcmp(colors[first].name, "white")==0){//fourth LED white
+      if(strcmp(colors[fourth].name, "white")==0){//fourth LED white
       digitalWrite(led4_red,HIGH);
       digitalWrite(led4_green,HIGH);
       digitalWrite(led4_blue,HIGH);
  
       }
-      else if(strcmp(colors[first].name, "purple") == 0){//fourth LED purple
+      else if(strcmp(colors[fourth].name, "purple") == 0){//fourth LED purple
         digitalWrite(led4_red,HIGH);
         digitalWrite(led4_blue,HIGH);
       }
-      else if(strcmp(colors[first].name, "yellow") == 0){//fourth LED yellow
+      else if(strcmp(colors[fourth].name, "yellow") == 0){//fourth LED yellow
         digitalWrite(led4_red,HIGH);
         digitalWrite(led4_green,HIGH);
       }
 
-      else if(strcmp(colors[first].name, "green") == 0){//fourth LED green
+      else if(strcmp(colors[fourth].name, "green") == 0){//fourth LED green
         digitalWrite(led4_green,HIGH);
       }
-      else if(strcmp(colors[first].name, "red") == 0){//fourth LED red
+      else if(strcmp(colors[fourth].name, "red") == 0){//fourth LED red
         digitalWrite(led4_red,HIGH);
       }
-      else if(strcmp(colors[first].name, "blue") == 0){//fourth LED blue
+      else if(strcmp(colors[fourth].name, "blue") == 0){//fourth LED blue
         digitalWrite(led4_blue,HIGH);
       }
     
@@ -253,18 +253,18 @@ void loop() {
   int turn = 0;
 
 //RANDOMIZE THE COLORS
-  /*colors[0].name = "white";
+  colors[0].name = "white";
   colors[1].name = "purple";
   colors[2].name = "yellow";
   colors[3].name = "green";
   colors[4].name = "red";
   colors[5].name = "blue";
-*/
 
+/*
 colors[0].name = "red";
 colors[1].name = "green";
 colors[2].name = "blue";
-
+*/
 
   for (int i = 0; i < NUMBER_OF_COLORS; i++ ){
       colors[i].possible_number = NUMBER_OF_HOLES;
@@ -297,9 +297,9 @@ colors[2].name = "blue";
 
   //printf("\nTURN %d\n\n", turn+1);
   //TESTING PURPOSES, CHANGE THAT
-  if(turn == 3){
+  /*if(turn == 6){
     turn = 0;
-  }
+  }*/
 
     if(turn == NUMBER_OF_COLORS && colors_found != NUMBER_OF_HOLES){//means at least 3 occurences of one color that is not the base color
       //printf("MUST BE ONE COLOR 3 OCCCURENCES\n");
