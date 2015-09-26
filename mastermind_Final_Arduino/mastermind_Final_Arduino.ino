@@ -50,7 +50,7 @@ int buttonState = 0;
 
 int buttonPin = 15;
 
-int led1_red = 11;
+/*int led1_red = 11;
 int led1_green = 12;
 int led1_blue = 13;
 
@@ -65,7 +65,23 @@ int led3_blue = 7;
 int led4_red = 2;
 int led4_green = 3;
 int led4_blue = 4;
+*/
 
+int led1_red = 2;
+int led1_green = 3;
+int led1_blue = 4;
+
+int led2_red = 5;
+int led2_green = 6;
+int led2_blue = 7;
+
+int led3_red = 8;
+int led3_green = 9;
+int led3_blue = 10;
+
+int led4_red = 11;
+int led4_green = 12;
+int led4_blue = 13;
 
 
 void setup() {
@@ -113,12 +129,12 @@ int getFeedback(void) {
       sensorValue = analogRead(sensorPin);
       Serial.print("VALUE CAPTURED: ");
       Serial.println(sensorValue);
-      if (sensorValue > 500) {
+      if (sensorValue > 450) {
         //covered for red peg
         right_position_right_color++;
         delay(2000);
       }
-      else if (sensorValue > 100 && sensorValue < 500) {
+      else if (sensorValue > 50 && sensorValue < 450) {
         //nothing ambient light
         delay(2000);
       }
