@@ -13,7 +13,8 @@
 /*Implementation of Mastermind solver for Arduino
 The robot gives its guesses using rgb leds to represent the 6 colors
 We give feedback using light intensity that represents the pegs
-The robot should be able to solve any combination given 6 colors and 4 holes within 9 turns*/
+The robot should be able to solve any combination given 6 colors and 4 holes within 9 turns
+inspiration https://www.youtube.com/watch?v=rmp05sCXTRg*/
 
 struct Color
 {
@@ -112,16 +113,18 @@ int getFeedback(void) {
       sensorValue = analogRead(sensorPin);
       Serial.print("VALUE CAPTURED: ");
       Serial.println(sensorValue);
-      if (sensorValue > 600) {
+      if (sensorValue > 500) {
+        //covered for red peg
         right_position_right_color++;
         delay(2000);
       }
-      else if (sensorValue > 400 && sensorValue < 600) {
-        wrong_position_right_color++;
+      else if (sensorValue > 100 && sensorValue < 500) {
+        //nothing ambient light
         delay(2000);
       }
       else {
-        //nothing
+        //flashlight for white peg
+        wrong_position_right_color++;
         delay(2000);
       }
     }
