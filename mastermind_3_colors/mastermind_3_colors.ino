@@ -39,6 +39,13 @@ struct Color colors[NUMBER_OF_COLORS];
 //int sensorRed = 0;
 //int sensorGreen = 1;
 //int sensorBlue = 2;
+int sensorPin = A0;
+int sensorValue = 0;
+
+int check = 0;
+int buttonState = 0;
+
+int buttonPin = 15;
 
 int led1_red = 11;
 int led1_green = 12;
@@ -97,13 +104,36 @@ int getFeedback(void) {
   scanf("%d", &wrong_position_right_color);
   printf("\n");
   return 0;*/
-
-  delay(5000);
-  right_position_right_color = 4;
+  right_position_right_color = 0;
   wrong_position_right_color = 0;
-  digitalWrite(led1_red, LOW);
-  digitalWrite(led1_green, LOW);
-  digitalWrite(led1_blue, LOW);
+  while(check < 4){
+     
+     sensorValue = analogRead(sensorPin);
+     Serial.print("Value: ");
+     Serial.println(sensorValue);
+     buttonState = digitalRead(buttonPin);
+    if (buttonState == HIGH){
+      Serial.println("BUTTON PUSHED");
+      check++;
+      sensorValue = analogRead(sensorPin);
+      Serial.print("VALUE CAPTURED: ");
+      Serial.println(sensorValue);
+      if(sensorValue>600){
+          right_position_right_color++;
+      }
+      else if(sensorValue>250 && sensorValue<550){
+        wrong_position_right_color++;
+      }
+      else{
+        //nothing
+      }
+    }
+
+    delay(1000);
+  }
+
+  check = 0;
+  delay(5000);
 
 }
 
@@ -297,9 +327,6 @@ void loop() {
 
     //printf("\nTURN %d\n\n", turn+1);
     //TESTING PURPOSES, CHANGE THAT
-    /*if(turn == 6){
-      turn = 0;
-    }*/
 
     if (turn == NUMBER_OF_COLORS && colors_found != NUMBER_OF_HOLES) { //means at least 3 occurences of one color that is not the base color
       //printf("MUST BE ONE COLOR 3 OCCCURENCES\n");
